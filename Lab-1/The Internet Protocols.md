@@ -102,6 +102,22 @@ I applied the filter `udp` to observe connectionless traffic. The capture shows 
 * **TCP Header (Complex):** The TCP header observed in Part 2 is **32 bytes** long and contains many fields like Sequence Number, Acknowledgment Number, Flags (SYN, ACK, FIN, PSH), and Window Size. This complexity is necessary to ensure reliable, ordered delivery and error checking.
 * **UDP Header (Simple):** The UDP header observed in Part 3 is only **8 bytes** long. It contains only four fields: Source Port, Destination Port, Length, and Checksum. It does not track sequence numbers or acknowledgments, making it much faster ("fire and forget") but less reliable than TCP.
 
-* Feature,TCP,UDP,Reasons
-Reliability and Connection Establishment,Connection-Oriented & Reliable,Connectionless & Unreliable,"TCP: Uses a 3-way handshake (SYN, SYN-ACK, ACK) to establish a session before sending data. It guarantees delivery using Acknowledgments (ACK packets).UDP: uses a ""fire-and-forget"" model. As observed in Part 3, there was no handshake; the data was sent immediately without verifying if the receiver was ready."
-Data Integrity and Ordering,Ordered & Error-Checked,Unordered & Basic Error Check,"TCP: Uses Sequence Numbers (which you observed incrementing in Part 2) to reassemble packets in the correct order, even if they arrive out of sequence.UDP: Packets are processed in the order they arrive. If a packet is lost or arrives out of order, UDP does not attempt to fix it (simpler 8-byte header)."
+## Part 4: Comparing TCP and UDP
+
+### Task 1: Reliability and Data Integrity Comparison
+
+| Feature | TCP | UDP | Reasons (Based on Lab Analysis) |
+| :--- | :--- | :--- | :--- |
+| **Reliability and Connection Establishment** | **Connection-Oriented**<br>(Reliable) | **Connectionless**<br>(Unreliable) | **TCP:** Uses the **3-Way Handshake** (SYN, SYN-ACK, ACK) observed in Part 2 to verify the server is ready before sending data. It also tracks delivery using ACK packets.<br><br>**UDP:** As seen in Part 3, UDP sends data immediately without a handshake ("fire and forget"). It does not verify if the receiver is ready or if the packet arrived. |
+| **Data Integrity and Ordering** | **Ordered & Error-Checked** | **Unordered** | **TCP:** Uses **Sequence Numbers** (which we tracked in Part 2) to reassemble packets in the exact order they were sent. If a packet is missing, it requests a retransmission.<br><br>**UDP:** Does not track sequence numbers. Packets are processed in the order they arrive, and if one is lost or arrives out of order, it is simply dropped or accepted as-is. |
+
+
+
+---
+
+### Task 2: Use Cases and Performance
+
+| Aspect | TCP | UDP |
+| :--- | :--- | :--- |
+| **Use Cases** | • **Web Browsing (HTTP/HTTPS):** Pages must load completely without errors.<br>• **Email (SMTP/IMAP):** Missing text or attachments is unacceptable.<br>• **File Transfers (FTP):** Data corruption corrupts the file. | • **Streaming Video/Audio:** Speed is critical; a few lost pixels (glitches) are better than buffering.<br>• **VoIP (Voice calls):** Real-time conversation is prioritized over perfect audio fidelity.<br>• **Online Gaming:** Low latency is required for player movement. |
+| **Performance** | **Slower / High Overhead**<br>The handshake, error checking, and acknowledgment process add latency (delay) to the transmission. | **Faster / Low Overhead**<br>The simple 8-byte header and lack of error-checking allow for maximum speed and efficiency. |
