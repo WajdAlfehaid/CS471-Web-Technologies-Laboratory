@@ -101,3 +101,7 @@ I applied the filter `udp` to observe connectionless traffic. The capture shows 
 ### Comparison: TCP vs. UDP Headers
 * **TCP Header (Complex):** The TCP header observed in Part 2 is **32 bytes** long and contains many fields like Sequence Number, Acknowledgment Number, Flags (SYN, ACK, FIN, PSH), and Window Size. This complexity is necessary to ensure reliable, ordered delivery and error checking.
 * **UDP Header (Simple):** The UDP header observed in Part 3 is only **8 bytes** long. It contains only four fields: Source Port, Destination Port, Length, and Checksum. It does not track sequence numbers or acknowledgments, making it much faster ("fire and forget") but less reliable than TCP.
+
+* Feature,TCP,UDP,Reasons
+Reliability and Connection Establishment,Connection-Oriented & Reliable,Connectionless & Unreliable,"TCP: Uses a 3-way handshake (SYN, SYN-ACK, ACK) to establish a session before sending data. It guarantees delivery using Acknowledgments (ACK packets).UDP: uses a ""fire-and-forget"" model. As observed in Part 3, there was no handshake; the data was sent immediately without verifying if the receiver was ready."
+Data Integrity and Ordering,Ordered & Error-Checked,Unordered & Basic Error Check,"TCP: Uses Sequence Numbers (which you observed incrementing in Part 2) to reassemble packets in the correct order, even if they arrive out of sequence.UDP: Packets are processed in the order they arrive. If a packet is lost or arrives out of order, UDP does not attempt to fix it (simpler 8-byte header)."
