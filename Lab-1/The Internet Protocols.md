@@ -1,1 +1,102 @@
+# Network Protocols Analysis Report
 
+## Part 1: Capturing and Analyzing HTTP Traffic
+
+### Task 1: Start Wireshark and Capture Packets
+To observe unencrypted HTTP traffic, I started Wireshark and filtered for my active network interface. I then navigated to **http://neverssl.com** in my web browser. This site was chosen because it does not use HTTPS encryption, allowing us to see the cleartext HTTP headers and content.
+
+![Wireshark Interface Screenshot](insert_interface_screenshot_here.png)
+
+### Task 2: Filter and Analyze HTTP Packets
+I applied the filter `http` to isolate the web traffic. The capture below shows the initial `GET` request and the server's `200 OK` response.
+
+![HTTP Filter Screenshot](insert_http_filter_screenshot_here.png)
+
+**Detailed Packet Analysis (Frame 126942):**
+* **Protocol:** HTTP/1.1
+* **Response Code:** 200 OK
+* **Date:** Tue, 03 Feb 2026 04:23:12 GMT
+* **Server:** gunicorn/19.9.0
+* **Content-Type:** `text/html; charset=utf-8`
+* **Content-Length:** 9593 bytes
+* **Time since request:** 163.917 ms
+
+### HTTP Request and Response Description
+* **HTTP Request:** The client sends a message to the server asking for a resource. The key line is the **Method** (e.g., `GET` to retrieve data or `POST` to send data) followed by the **URL** (Uniform Resource Locator). In my capture, the client sent `GET / HTTP/1.1`.
+* **HTTP Response:** The server replies with a status line.
+    * **200 OK:** The request was successful, and the content is included.
+    * **404 Not Found:** The requested resource does not exist.
+    * In this task, the server responded with `200 OK` and provided the HTML file.
+
+---
+
+## Part 2: Analyzing TCP/IP Traffic
+
+### Task 1: Filter TCP Packets
+I filtered the capture using `tcp` to view the underlying transport layer for the HTTP conversation.
+
+![TCP Filter Screenshot](insert_tcp_filter_screenshot_here.png)
+
+### Task 2: TCP Handshake Analysis
+I identified the **Three-Way Handshake** used to establish the connection between my client (`172.20.10.3`) and the server (`104.16.192.80`).
+
+![3-Way Handshake Screenshot](insert_handshake_screenshot_here.png)
+
+**Sequence & Acknowledgment Analysis:**
+1.  **SYN (Packet 37101):**
+    * **Seq:** 0
+    * **Flag:** SYN
+    * **Meaning:** Client initiates the connection.
+2.  **SYN-ACK (Packet 37259):**
+    * **Seq:** 0, **Ack:** 1
+    * **Flag:** SYN, ACK
+    * **Meaning:** Server acknowledges the client's SYN (Ack=0+1) and sends its own SYN.
+3.  **ACK (Packet 37262):**
+    * **Seq:** 1, **Ack:** 1
+    * **Flag:** ACK
+    * **Meaning:** Client acknowledges the server's SYN. The connection is now established.
+
+### Step 3: Data Transfer Observation
+After the connection was established, I observed the data exchange. Packet **37265** initiated the TLS handshake ("Client Hello"), followed by packet **37451** which contained the encrypted **Application Data**. The sequence numbers increased as data was transferred.
+
+![Data Transfer Screenshot](insert_data_transfer_screenshot_here.png)
+
+### Step 4: TCP Termination
+I observed the connection closing via the FIN/ACK process.
+* **Packet 297984:** Client sends `[FIN, ACK]` (Seq=2062).
+* **Packet 298333:** Server responds with `[FIN, ACK]` (Ack=2063).
+
+### TCP Header Detail (Packet Analysis)
+Below is the detailed view of a TCP header from the capture.
+
+![TCP Header Screenshot](insert_tcp_header_screenshot_here.png)
+
+**Header Description:**
+* **Source Port:** 443 (Server/HTTPS)
+* **Destination Port:** 56145 (Client)
+* **Sequence Number (Raw):** 4193403285
+* **Flags:** 0x010 (ACK) is set, indicating this packet is acknowledging data.
+* **Header Length:** 32 bytes.
+* **Window Size:** 64 (Used for flow control).
+* **Checksum:** 0xfcad (Unverified).
+
+---
+
+## Part 3: Capturing and Analyzing UDP Traffic
+
+### Task 2: Filter and Analyze UDP Packets
+I applied the filter `udp` to observe connectionless traffic. The capture shows traffic on port 443 (likely QUIC protocol) and port 51071.
+
+![UDP Filter Screenshot](insert_udp_filter_screenshot_here.png)
+
+**UDP Packet Detail (Stream Index 7):**
+* **Source Port:** 443
+* **Destination Port:** 51071
+* **Length:** 41 bytes (8 bytes header + 33 bytes data)
+* **UDP Payload:** 33 bytes of data starting with `48392cb3...`
+
+![UDP Details Screenshot](insert_udp_details_screenshot_here.png)
+
+### Comparison: TCP vs. UDP Headers
+* **TCP Header (Complex):** The TCP header observed in Part 2 is **32 bytes** long and contains many fields like Sequence Number, Acknowledgment Number, Flags (SYN, ACK, FIN, PSH), and Window Size. This complexity is necessary to ensure reliable, ordered delivery and error checking.
+* **UDP Header (Simple):** The UDP header observed in Part 3 is only **8 bytes** long. It contains only four fields: Source Port, Destination Port, Length, and Checksum. It does not track sequence numbers or acknowledgments, making it much faster ("fire and forget") but less reliable than TCP.
