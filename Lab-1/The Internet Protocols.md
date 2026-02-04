@@ -5,12 +5,12 @@
 ### Task 1: Start Wireshark and Capture Packets
 To observe unencrypted HTTP traffic, I started Wireshark and filtered for my active network interface. I then navigated to **http://neverssl.com** in my web browser. This site was chosen because it does not use HTTPS encryption, allowing us to see the cleartext HTTP headers and content.
 
-![Wireshark Interface Screenshot](insert_interface_screenshot_here.png)
+![Wireshark Interface Screenshot](1.png)
 
 ### Task 2: Filter and Analyze HTTP Packets
 I applied the filter `http` to isolate the web traffic. The capture below shows the initial `GET` request and the server's `200 OK` response.
 
-![HTTP Filter Screenshot](insert_http_filter_screenshot_here.png)
+![HTTP Filter Screenshot](2.png)
 
 **Detailed Packet Analysis (Frame 126942):**
 * **Protocol:** HTTP/1.1
@@ -35,12 +35,12 @@ I applied the filter `http` to isolate the web traffic. The capture below shows 
 ### Task 1: Filter TCP Packets
 I filtered the capture using `tcp` to view the underlying transport layer for the HTTP conversation.
 
-![TCP Filter Screenshot](insert_tcp_filter_screenshot_here.png)
+![TCP Filter Screenshot](3.png)
 
 ### Task 2: TCP Handshake Analysis
 I identified the **Three-Way Handshake** used to establish the connection between my client (`172.20.10.3`) and the server (`104.16.192.80`).
 
-![3-Way Handshake Screenshot](insert_handshake_screenshot_here.png)
+![3-Way Handshake Screenshot](4.png)
 
 **Sequence & Acknowledgment Analysis:**
 1.  **SYN (Packet 37101):**
@@ -59,7 +59,7 @@ I identified the **Three-Way Handshake** used to establish the connection betwee
 ### Step 3: Data Transfer Observation
 After the connection was established, I observed the data exchange. Packet **37265** initiated the TLS handshake ("Client Hello"), followed by packet **37451** which contained the encrypted **Application Data**. The sequence numbers increased as data was transferred.
 
-![Data Transfer Screenshot](insert_data_transfer_screenshot_here.png)
+![Data Transfer Screenshot](5.png)
 
 ### Step 4: TCP Termination
 I observed the connection closing via the FIN/ACK process.
@@ -69,7 +69,7 @@ I observed the connection closing via the FIN/ACK process.
 ### TCP Header Detail (Packet Analysis)
 Below is the detailed view of a TCP header from the capture.
 
-![TCP Header Screenshot](insert_tcp_header_screenshot_here.png)
+![TCP Header Screenshot](6.png)
 
 **Header Description:**
 * **Source Port:** 443 (Server/HTTPS)
@@ -87,7 +87,7 @@ Below is the detailed view of a TCP header from the capture.
 ### Task 2: Filter and Analyze UDP Packets
 I applied the filter `udp` to observe connectionless traffic. The capture shows traffic on port 443 (likely QUIC protocol) and port 51071.
 
-![UDP Filter Screenshot](insert_udp_filter_screenshot_here.png)
+![UDP Filter Screenshot](7.png)
 
 **UDP Packet Detail (Stream Index 7):**
 * **Source Port:** 443
@@ -95,7 +95,7 @@ I applied the filter `udp` to observe connectionless traffic. The capture shows 
 * **Length:** 41 bytes (8 bytes header + 33 bytes data)
 * **UDP Payload:** 33 bytes of data starting with `48392cb3...`
 
-![UDP Details Screenshot](insert_udp_details_screenshot_here.png)
+![UDP Details Screenshot](8.png)
 
 ### Comparison: TCP vs. UDP Headers
 * **TCP Header (Complex):** The TCP header observed in Part 2 is **32 bytes** long and contains many fields like Sequence Number, Acknowledgment Number, Flags (SYN, ACK, FIN, PSH), and Window Size. This complexity is necessary to ensure reliable, ordered delivery and error checking.
