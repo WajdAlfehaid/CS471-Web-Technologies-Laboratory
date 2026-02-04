@@ -5,12 +5,12 @@
 ### Task 1: Start Wireshark and Capture Packets
 To observe unencrypted HTTP traffic, I started Wireshark and filtered for my active network interface. I then navigated to **http://neverssl.com** in my web browser. This site was chosen because it does not use HTTPS encryption, allowing us to see the cleartext HTTP headers and content.
 
-![Wireshark Interface Screenshot](1.png)
+![Wireshark Interface Screenshot](111.png)
 
 ### Task 2: Filter and Analyze HTTP Packets
 I applied the filter `http` to isolate the web traffic. The capture below shows the initial `GET` request and the server's `200 OK` response.
 
-![HTTP Filter Screenshot](2.png)
+![HTTP Filter Screenshot](1.png)
 
 **Detailed Packet Analysis (Frame 126942):**
 * **Protocol:** HTTP/1.1
