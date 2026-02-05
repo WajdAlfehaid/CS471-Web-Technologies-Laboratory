@@ -86,7 +86,7 @@ Below is the detailed view of a TCP header from the capture.
 ## Part 3: Capturing and Analyzing UDP Traffic
 
 ### Task 2: Filter and Analyze UDP Packets
-I applied the filter `udp` to observe connectionless traffic. The capture shows traffic on port 443 (likely QUIC protocol) and port 51071.
+I applied the filter `udp` to observe connectionless traffic.
 
 ![UDP Filter Screenshot](images/9.png)
 
