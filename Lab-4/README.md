@@ -29,28 +29,24 @@ The Home page serves as the entry point to the Library website. It successfully 
 
 ### 2. About Us Page
 ![About Us Screenshot](screenshots/About.png)
-*Replace `screenshots/about_page.png` with the actual path to your screenshot.*
 
 **Description:** 
 The About Us page provides library contact information and a `mailto:` link. Like all pages, it dynamically includes the global header and footer components. The Django URL resolver successfully identifies the current route to apply the `.active` CSS class to the "About" navigation tab.
 
 ### 3. List of Books Page
 ![List of Books Screenshot](screenshots/List_Books.png)
-*Replace `screenshots/list_books_page.png` with the actual path to your screenshot.*
 
 **Description:** 
 This page displays a catalog of available books. It utilizes an internal `<style>` block (injected into the base layout's `stylesheets` block) to uniquely format the `h1`, `h2`, and `p` tags specifically for this view. All book cover images are served locally through Django's `{% static %}` template tag. Clicking a book title or image triggers a parameterized Django URL route (`{% url 'books.view_one_book' 1 %}`) to load the specific book details.
 
 ### 4. Single Book Details Page
 ![Single Book Screenshot](screenshots/One_Book.png)
-*Replace `screenshots/one_book_page.png` with the actual path to your screenshot.*
 
 **Description:** 
 This dynamic view renders the detailed information for a specific book selected from the catalog. It effectively processes the URL parameter (`bookId`) passed from the routing configuration. A functional "Go Back" link is implemented using the `{% url 'books.list_books' %}` tag to seamlessly return the user to the catalog.
 
 ### 5. W3C HTML5 Validation (Optional but recommended)
 ![W3C Validation Screenshot](screenshots/w3c_validation.png)
-*Replace `screenshots/w3c_validation.png` with a screenshot of your W3C passing screen.*
 
 **Description:** 
 Verification that the generated HTML output complies with W3C HTML5 syntax standards, ensuring cross-browser compatibility and structural integrity.
