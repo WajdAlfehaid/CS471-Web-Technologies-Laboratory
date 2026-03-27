@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Show one Book {% endblock title %}
+
+{% block content %}
+<a href="{% url 'books.list_books' %}">Go Back</a>
+
+<h1>Details of Book1</h1>
+<h2>Foundations of Computer Science</h2>
+<h2>Author: Alfred Aho and Jeffrey Ullman</h2>
+<p><strong> Aho and Ullman </strong> have created a C version of their
+groundbreaking text. As in that text, this book combines the theoretical
+foundations of computing with essential discrete mathematics.
+It follows the same organizations as its predecessor, with all examples
+and exercises in C. </p>
+
+<img src="{% static 'book1.jpg' %}" alt="Book1 img desc" width="200" height="200">
+{% endblock content %}
